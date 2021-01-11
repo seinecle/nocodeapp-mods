@@ -73,7 +73,7 @@ jobs:
         architecture: x64
 
     - name: View artifacts
-      run: dir
+      run: ls
 
     - name: run jlink
       run: "jlink --no-header-files --no-man-pages --module-path mac/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
@@ -82,7 +82,7 @@ jobs:
       run: "jpackage --type dmg -n ${{ env.pkg-name }} --module-path mac/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
-      run: dir
+      run: ls
 
     - name: upload dmg installer to temp github action working folder
       uses: actions/upload-artifact@v2
@@ -127,7 +127,7 @@ jobs:
         architecture: x64
 
     - name: View artifacts
-      run: dir
+      run: ls
 
     - name: run jlink
       run: "jlink --no-header-files --no-man-pages --module-path linux/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
@@ -136,7 +136,7 @@ jobs:
       run: "jpackage --type deb -n ${{ env.pkg-name }} --module-path linux/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
-      run: dir
+      run: ls
 
     - name: upload deb installer to temp github action working folder
       uses: actions/upload-artifact@v2
