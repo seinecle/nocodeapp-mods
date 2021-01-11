@@ -27,6 +27,7 @@ jobs:
 
   upload:
     runs-on: [ubuntu-latest]
+    steps:
     - name: Upload installer
       uses: actions/upload-artifact@v1
       with:
