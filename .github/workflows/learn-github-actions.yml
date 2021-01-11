@@ -23,11 +23,15 @@ jobs:
 
     - name: Package app
       run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }}-${{ env.pkg-version }} --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+
+    - name: View artifacts
+      run: dir
+
     - name: Upload installer
       uses: actions/upload-artifact@v2
       with:
         name: msis
-        path: "${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
+        path: ./"${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
         if-no-files-found: warn
     - name: Create Release
       id: create_release
