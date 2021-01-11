@@ -33,7 +33,8 @@ jobs:
       with:
         name: msis
         path: "${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
-
+    - name: Checkout code
+        uses: actions/checkout@v2
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
