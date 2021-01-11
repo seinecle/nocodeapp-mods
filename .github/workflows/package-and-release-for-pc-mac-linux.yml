@@ -142,7 +142,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: deb
-        path: "${{ env.pkg-name }}-${{ env.pkg-version }}.deb"
+        path: "${{ env.pkg-name }}-${{ env.pkg-version }}_amd64.deb"
         if-no-files-found: warn
     - name: create release for deb installer
       id: create_release
@@ -166,6 +166,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: "./${{ env.pkg-name }}-${{ env.pkg-version }}.deb"
-        asset_name: ${{ env.pkg-name }}-${{ env.pkg-version }}.deb
+        asset_path: "./${{ env.pkg-name }}-${{ env.pkg-version }}_amd64.deb"
+        asset_name: ${{ env.pkg-name }}-${{ env.pkg-version }}_amd64.deb
         asset_content_type: application/vnd.debian.binary-package
