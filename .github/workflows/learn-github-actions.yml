@@ -25,7 +25,7 @@ jobs:
       run: "jlink --no-header-files --no-man-pages --module-path win/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
     - name: run jpackage
-      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }} --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }} --module-path win/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
       run: dir
@@ -42,8 +42,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ env.pkg-version }}-1.0
-        release_name: Release ${{ env.pkg-version }}-1.0
+        tag_name: ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.0.1
+        release_name: Release ${{ env.pkg-name }}--windows-${{ env.pkg-version }}.0.1
         body: |
           Changes in this Release
           - alpha version
