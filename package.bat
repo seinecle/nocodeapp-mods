@@ -3,7 +3,7 @@ PAUSE
 REM image/bin/java --module-path mods -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain
 
 REM WINDOWS
-jpackage --type msi --win-menu --win-menu-group "No-code" --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n "No-code App Packaged" --module-path mods/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain
+jpackage --type msi --win-menu --win-menu-group "No-code" --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n "No-code App Packaged" --module-path mods/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain
 PAUSE
 
 REM MACOS
