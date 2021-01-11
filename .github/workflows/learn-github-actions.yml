@@ -22,19 +22,12 @@ jobs:
       run: dir
 
     - name: Package app
-      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }}-${{ env.pkg-version }}.msi --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
-
-
-  upload:
-    runs-on: [ubuntu-latest]
-    steps:
+      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }}-${{ env.pkg-version }} --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
     - name: Upload installer
       uses: actions/upload-artifact@v1
       with:
         name: msis
         path: "${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
-    - name: Checkout code
-        uses: actions/checkout@v2
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
