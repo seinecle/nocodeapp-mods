@@ -22,7 +22,7 @@ jobs:
       run: dir
 
     - name: Package app
-      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }} --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }}-${{ env.pkg-version }}.msi --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
 
   upload:
