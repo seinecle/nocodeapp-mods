@@ -19,7 +19,7 @@ jobs:
         java-package: jdk
         architecture: x64
 
-    - name: Package jar as msi
+    - name: Package app as msi
       run: "jpackage --type msi --win-menu --win-menu-group "${{ env.pkg-name }}" --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n "${{ env.pkg-name }}" --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
