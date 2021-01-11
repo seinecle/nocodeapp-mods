@@ -31,7 +31,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: msis
-        path: ./"${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
+        path: "${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
         if-no-files-found: warn
     - name: Create Release
       id: create_release
