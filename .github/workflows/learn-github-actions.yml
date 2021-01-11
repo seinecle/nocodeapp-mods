@@ -8,7 +8,7 @@ env:
   pkg-version: '1.0'
 
 jobs:
-  windows msi installer creation:
+  windows-msi-installer-creation:
     runs-on: [windows-latest]
     steps:
     - uses: actions/checkout@v2
