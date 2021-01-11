@@ -8,7 +8,7 @@ env:
   pkg-version: '1.0'
 
 jobs:
-  windows:
+  windows msi installer creation:
     runs-on: [windows-latest]
     steps:
     - uses: actions/checkout@v2
@@ -21,19 +21,22 @@ jobs:
     - name: View artifacts
       run: dir
 
-    - name: Package app
+    - name: run jlink
+      run: "jlink --no-header-files --no-man-pages --module-path win/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
+
+    - name: run jpackage
       run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }} --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
       run: dir
 
-    - name: Upload installer
+    - name: upload msi installer to temp github action working folder
       uses: actions/upload-artifact@v2
       with:
-        name: msis
+        name: msi
         path: "${{ env.pkg-name }}-${{ env.pkg-version }}.msi"
         if-no-files-found: warn
-    - name: Create Release
+    - name: create release for msi installer
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -43,12 +46,12 @@ jobs:
         release_name: Release ${{ github.ref }}
         body: |
           Changes in this Release
-          - First Change
-          - Second Change
+          - alpha version
+          - not stable
         draft: false
         prerelease: false
           
-    - name: Upload Release Asset
+    - name: Upload Release Asset to release page
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
       env:
