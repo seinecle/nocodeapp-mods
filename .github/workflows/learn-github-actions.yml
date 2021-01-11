@@ -8,7 +8,6 @@ env:
   pkg-version: '1.0'
 
 jobs:
-
   windows:
     runs-on: [windows-latest]
     steps:
@@ -26,6 +25,8 @@ jobs:
       run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --win-console -n ${{ env.pkg-name }} --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
 
+  upload:
+    runs-on: [ubuntu-latest]
     - name: Upload installer
       uses: actions/upload-artifact@v1
       with:
