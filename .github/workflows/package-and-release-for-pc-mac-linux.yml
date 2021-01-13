@@ -29,7 +29,7 @@ jobs:
       run: "jlink --no-header-files --no-man-pages --module-path win/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
     - name: run jpackage
-      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --app-version ${{ env.pkg-version }} --description "${{ env.pkg-description }}" --vendor "${{ env.pkg-vendor }}" --win-console -n ${{ env.pkg-name }} --module-path win/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-dir-chooser --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --win-console -n ${{ env.pkg-name }} --module-path win/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
       run: dir
@@ -83,7 +83,7 @@ jobs:
       run: "jlink --no-header-files --no-man-pages --module-path mac/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
     - name: run jpackage
-      run: "jpackage --type dmg -n ${{ env.pkg-name }} --app-version ${{ env.pkg-version }} --description "${{ env.pkg-description }}" --vendor "${{ env.pkg-vendor }}" --module-path mac/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type dmg -n ${{ env.pkg-name }} --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
       run: ls
@@ -138,7 +138,7 @@ jobs:
       run: "jlink --no-header-files --no-man-pages --module-path linux/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
     - name: run jpackage
-      run: "jpackage --type deb -n ${{ env.pkg-name }} --app-version ${{ env.pkg-version }} --description "${{ env.pkg-description }}" --vendor "${{ env.pkg-vendor }}" --module-path linux/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type deb -n ${{ env.pkg-name }} --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path linux/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
       run: ls
