@@ -7,9 +7,12 @@ env:
   pkg-name: 'nocode-app'
   pkg-version: '1.0'
   pkg-description: 'no code app for data science jobs'
-  pkg-vendor: 'Clement Levallois - https://clementlevallois.net'
+  pkg-vendor: 'Clement Levallois - www.clementlevallois.net'
   #the short version is useful for the linux build, which truncates the 1.0 into 1
   pkg-version-short: '1'
+  #increment the minor version otherwise duplicate tags -> fail
+  pkg-version-minor: '0.2'
+  pkg-release-notes: 'release-notes.md'
 
 jobs:
   windows-msi-installer-creation:
@@ -42,16 +45,13 @@ jobs:
         if-no-files-found: warn
     - name: create release for msi installer
       id: create_release
-      uses: actions/create-release@v1
+      uses: actions/create-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.0.1
-        release_name: Release ${{ env.pkg-name }}--windows-${{ env.pkg-version }}.0.1
-        body: |
-          Changes in this Release
-          - alpha version
-          - not stable
+        tag_name: ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        release_name: Release ${{ env.pkg-name }}--windows-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        body-path: ${{ env.pkg-release-notes }}
         draft: false
         prerelease: false
           
@@ -96,16 +96,13 @@ jobs:
         if-no-files-found: warn
     - name: create release for dmg installer
       id: create_release
-      uses: actions/create-release@v1
+      uses: actions/create-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ env.pkg-name }}-macOS-${{ env.pkg-version }}.0.1
-        release_name: Release ${{ env.pkg-name }}--macOS-${{ env.pkg-version }}.0.1
-        body: |
-          Changes in this Release
-          - alpha version
-          - not stable
+        tag_name: ${{ env.pkg-name }}-macOS-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        release_name: Release ${{ env.pkg-name }}--macOS-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        body_path: ${{ env.pkg-release-notes }}
         draft: false
         prerelease: false
           
@@ -152,16 +149,13 @@ jobs:
         if-no-files-found: warn
     - name: create release for deb installer
       id: create_release
-      uses: actions/create-release@v1
+      uses: actions/create-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ env.pkg-name }}-linux-${{ env.pkg-version }}.0.1
-        release_name: Release ${{ env.pkg-name }}--linux-${{ env.pkg-version }}.0.1
-        body: |
-          Changes in this Release
-          - alpha version
-          - not stable
+        tag_name: ${{ env.pkg-name }}-linux-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        release_name: Release ${{ env.pkg-name }}--linux-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        body_path: ${{ env.pkg-release-notes }}
         draft: false
         prerelease: false
           
