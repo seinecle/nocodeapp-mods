@@ -49,8 +49,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.${{ pkg-version-minor }}
-        release_name: Release ${{ env.pkg-name }}--windows-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        tag_name: ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.${{ env.pkg-version-minor }}
+        release_name: Release ${{ env.pkg-name }}--windows-${{ env.pkg-version }}.${{ env.pkg-version-minor }}
         body-path: ${{ env.pkg-release-notes }}
         draft: false
         prerelease: false
@@ -100,8 +100,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ env.pkg-name }}-macOS-${{ env.pkg-version }}.${{ pkg-version-minor }}
-        release_name: Release ${{ env.pkg-name }}--macOS-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        tag_name: ${{ env.pkg-name }}-macOS-${{ env.pkg-version }}.${{ env.pkg-version-minor }}
+        release_name: Release ${{ env.pkg-name }}--macOS-${{ env.pkg-version }}.${{ env.pkg-version-minor }}
         body_path: ${{ env.pkg-release-notes }}
         draft: false
         prerelease: false
@@ -153,8 +153,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ env.pkg-name }}-linux-${{ env.pkg-version }}.${{ pkg-version-minor }}
-        release_name: Release ${{ env.pkg-name }}--linux-${{ env.pkg-version }}.${{ pkg-version-minor }}
+        tag_name: ${{ env.pkg-name }}-linux-${{ env.pkg-version }}.${{ env.pkg-version-minor }}
+        release_name: Release ${{ env.pkg-name }}--linux-${{ env.pkg-version }}.${{ env.pkg-version-minor }}
         body_path: ${{ env.pkg-release-notes }}
         draft: false
         prerelease: false
