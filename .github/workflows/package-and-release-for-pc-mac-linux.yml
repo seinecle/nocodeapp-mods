@@ -42,8 +42,12 @@ jobs:
     - name: upload msi installer to temp github action working folder
       uses: actions/upload-artifact@v2
       with:
-        name: msi
-        path: "${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi"
+        name: msi_and_release_notes
+        # we upload release notes just on one job (this one) to avoid corruption with simulatenous uploads of the same file
+        path: |
+          ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
+          ${{ env.pkg-release-notes }}
+          
         if-no-files-found: warn
 
           
@@ -51,10 +55,10 @@ jobs:
     needs: [windows-msi-installer-creation]
     runs-on: [ubuntu-latest]
     steps:
-    - name: Download msi installer
+    - name: Download msi installer and also the release notes
       uses: actions/download-artifact@v2
       with:
-        name: msi
+        name: msi_and_release_notes
         
     - name: View artifacts
       run: ls
