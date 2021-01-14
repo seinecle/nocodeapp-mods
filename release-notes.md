@@ -1,5 +1,5 @@
 # Downloads
-See below in the "assets" sub-menu to download the app for mac, windows and linux
+See below in the "Assets" sub-menu to download the app for mac, windows and linux
 
 # changes
 
@@ -11,3 +11,4 @@ See below in the "assets" sub-menu to download the app for mac, windows and linu
 
 ## build / infrastructure
 - added metadata to the release instructions for mac, win and linux
+- gather all builds into one common release (instead of one release each for mac, linux and win)
