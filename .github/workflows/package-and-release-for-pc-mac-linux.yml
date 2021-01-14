@@ -56,7 +56,6 @@ jobs:
       with:
         name: msi
         
-    - uses: actions/checkout@v2
     - name: View artifacts
       run: ls
 
