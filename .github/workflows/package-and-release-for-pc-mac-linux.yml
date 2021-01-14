@@ -48,13 +48,13 @@ jobs:
     # needs: windows-msi-installer-creation
     runs-on: [ubuntu-latest]
     steps:
-
-    - name: upload release notes to temp github action working folder
-      uses: actions/upload-artifact@v2
-      with:
-        name: release-notes
-        path: ${{ env.pkg-release-notes }}
-        if-no-files-found: warn
+    - uses: actions/checkout@v2
+    # - name: upload release notes to temp github action working folder
+      # uses: actions/upload-artifact@v2
+      # with:
+        # name: release-notes
+        # path: ${{ env.pkg-release-notes }}
+        # if-no-files-found: warn
 
     - name: create release
       id: create_release
