@@ -42,7 +42,7 @@ jobs:
     - name: upload msi installer to temp github action working folder
       uses: actions/upload-artifact@v2
       with:
-        name: msi_and_release_notes
+        name: msi
         # we upload release notes just on one job (this one) to avoid corruption with simulatenous uploads of the same file
         path: |
           ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
@@ -98,7 +98,8 @@ jobs:
       with:
         tag_name: v.${{ env.pkg-version }}.${{ env.pkg-version-minor }}
         release_name: Release ${{ env.pkg-version }}.${{ env.pkg-version-minor }}
-        body_path: ${{ env.pkg-release-notes }}
+        # release notes are stored with the win folder
+        body_path: msi/${{ env.pkg-release-notes }}
         draft: false
         prerelease: false
         
@@ -111,5 +112,5 @@ jobs:
         tag_name: v.${{ env.pkg-version }}.${{ env.pkg-version-minor }}
         name: Release ${{ env.pkg-version }}.${{ env.pkg-version-minor }}
         files: |
-          ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
-          ${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg
+          msi/${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
+          dmg/${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg
