@@ -1,3 +1,6 @@
+# Downloads
+See below in the "assets" sub-menu to download the app for mac, windows and linux
+
 # changes
 
 ## in-app user experience
