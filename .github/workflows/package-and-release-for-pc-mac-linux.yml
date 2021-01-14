@@ -111,7 +111,7 @@ jobs:
 
           
   creates-release-and-upload-all-installers-to-it:
-    needs: [windows-msi-installer-creation,macos-dmg-installer-creation]
+    needs: [windows-msi-installer-creation,macos-dmg-installer-creation,linux-deb-installer-creation]
     runs-on: [ubuntu-latest]
     steps:
     - name: Download all installers and also the release notes
