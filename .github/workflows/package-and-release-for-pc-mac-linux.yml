@@ -15,39 +15,46 @@ env:
   pkg-release-notes: 'release-notes.md'
 
 jobs:
-  windows-msi-installer-creation:
-    runs-on: [windows-latest]
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '15'
-        java-package: jdk
-        architecture: x64
+  # windows-msi-installer-creation:
+    # runs-on: [windows-latest]
+    # steps:
+    # - uses: actions/checkout@v2
+    # - uses: actions/setup-java@v1
+      # with:
+        # java-version: '15'
+        # java-package: jdk
+        # architecture: x64
 
-    - name: View artifacts
-      run: dir
+    # - name: View artifacts
+      # run: dir
 
-    - name: run jlink
-      run: "jlink --no-header-files --no-man-pages --module-path win/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
+    # - name: run jlink
+      # run: "jlink --no-header-files --no-man-pages --module-path win/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
-    - name: run jpackage
-      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --icon logo.ico --win-dir-chooser --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --win-shortcut --win-console -n ${{ env.pkg-name }}-windows --module-path win/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+    # - name: run jpackage
+      # run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --icon logo.ico --win-dir-chooser --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --win-shortcut --win-console -n ${{ env.pkg-name }}-windows --module-path win/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
-    - name: View artifacts
-      run: dir
+    # - name: View artifacts
+      # run: dir
 
-    - name: upload msi installer to temp github action working folder
-      uses: actions/upload-artifact@v2
-      with:
-        name: msi
-        path: "${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi"
-        if-no-files-found: warn
+    # - name: upload msi installer to temp github action working folder
+      # uses: actions/upload-artifact@v2
+      # with:
+        # name: msi
+        # path: "${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi"
+        # if-no-files-found: warn
 
   new-release-creation:
-    needs: windows-msi-installer-creation
+    # needs: windows-msi-installer-creation
     runs-on: [ubuntu-latest]
     steps:
+
+    - name: upload release notes to temp github action working folder
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-notes
+        path: ${{ env.pkg-release-notes }}
+        if-no-files-found: warn
 
     - name: create release
       id: create_release
@@ -61,16 +68,16 @@ jobs:
         draft: false
         prerelease: false
           
-  upload-all-installers-to-new-release:
-    needs: [windows-msi-installer-creation, new-release-creation]
-    runs-on: [ubuntu-latest]
-    steps:
-    - name: Upload all installers to release page
-      id: upload-release-asset 
-      uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        files: |
-          ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
+  # upload-all-installers-to-new-release:
+    # needs: [windows-msi-installer-creation, new-release-creation]
+    # runs-on: [ubuntu-latest]
+    # steps:
+    # - name: Upload all installers to release page
+      # id: upload-release-asset 
+      # uses: softprops/action-gh-release@v1
+      # env:
+        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # with:
+        # upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        # files: |
+          # ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
