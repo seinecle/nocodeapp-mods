@@ -63,7 +63,7 @@ jobs:
   upload-all-installers-to-new-release:
     runs-on: [ubuntu-latest]
     steps:
-   - name: Upload all installers to release page
+    - name: Upload all installers to release page
       id: upload-release-asset 
       uses: uses: softprops/action-gh-release@v1
       env:
