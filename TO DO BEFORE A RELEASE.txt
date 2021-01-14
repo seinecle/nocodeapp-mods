@@ -1,0 +1,6 @@
+- copy the jars from the windows folder to the linux AND mac folders
+
+- increment the minor version
+- update the release notes
+
+then only you can push

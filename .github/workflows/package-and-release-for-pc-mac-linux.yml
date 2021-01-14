@@ -105,8 +105,8 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: deb
-        #ATTENTION HERE LINUX FOLLOWS THIS WEIRD PATTERN OF NAMING, WHICH IS REPEATED BELOW
-        path: "${{ env.pkg-name }}-linux-${{ env.pkg-version }}-${{ env.pkg-version-short }}_amd64.deb"
+        #ATTENTION HERE LINUX FOLLOWS THIS WEIRD PATTERN OF NAMING AND ADDS UNDERSCORE + VERSION, SO I FOLLOW THIS PATTERN
+        path: "${{ env.pkg-name }}-linux_${{ env.pkg-version }}-${{ env.pkg-version-short }}_amd64.deb"
         if-no-files-found: warn
 
           
@@ -141,7 +141,8 @@ jobs:
       with:
         tag_name: v.${{ env.pkg-version }}.${{ env.pkg-version-minor }}
         name: Release ${{ env.pkg-version }}.${{ env.pkg-version-minor }}
+        # please note that the underscore in the name of the linux installer is not a mistake: it is added automatically by the linux installer build (see comment above)
         files: |
           msi/${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
           dmg/${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg
-          deb/${{ env.pkg-name }}-linux-${{ env.pkg-version }}-${{ env.pkg-version-short }}_amd64.deb
+          deb/${{ env.pkg-name }}-linux_${{ env.pkg-version }}-${{ env.pkg-version-short }}_amd64.deb
