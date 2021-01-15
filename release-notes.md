@@ -6,6 +6,7 @@ See below in the "Assets" sub-menu to download the app for mac, windows and linu
 
 # Limitations:
 - if you install the Windows version, you should not install it in `C:/Program...` Create a subfolder in your `My Documents` directory instead. If you absolutely prefer to install it in `C:/Program...`, you need to launch the app with "Execute as an administrator". The reason is that the app creates a folder to store temp files, and this folder creation needs admin rights if it is happening in `C:/Program`
+- if you install the **Mac** version, you need to run `sudo spctl --master-disable` in the terminal once so that it can be opened. You can run `sudo spctl --master-enable` to restore the defaul security settings after running the app.
 
 # changes
 

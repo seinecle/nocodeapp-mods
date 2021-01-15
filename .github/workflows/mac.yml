@@ -1,0 +1,78 @@
+name: Build for Release
+
+on:
+  [push]
+
+env:
+  pkg-name: 'nocode-app'
+  pkg-version: '1.0'
+  pkg-description: 'no code app for data science jobs'
+  pkg-vendor: 'Clement Levallois - www.clementlevallois.net'
+  #the short version is useful for the linux build, which truncates the 1.0 into 1
+  pkg-version-short: '1'
+  #increment the minor version otherwise duplicate tags -> fail
+  pkg-version-minor: '0.4'
+  pkg-release-notes: 'release-notes.md'
+  JAR_PATH: `ls *.jar`
+  JAR_FILE:`basename "$JAR_PATH"`
+
+
+
+jobs:
+  macos-dmg-installer-creation:
+    runs-on: [macos-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '15'
+        java-package: jdk
+        architecture: x64
+
+    - name: View artifacts
+      run: ls
+
+    - name: Sign each file in each jar
+      run: |
+        rm -rf tmp
+        mkdir tmp
+        mv "${{ env.JAR_PATH }}" tmp/
+        pushd tmp
+        for f in $(ls); do jar xf "${{ $JAR_FILE }}" ; rm "${{ $JAR_FILE }}"; ls *.dylib | xargs codesign -s "Developer ID Application: Clement Levallois" -f -v;       jar cmf META-INF/MANIFEST.MF "../${{ env.JAR_PATH }}" *; done;
+        popd
+  
+    - name: run jlink
+      run: "jlink --no-header-files --no-man-pages --module-path mac/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
+
+    - name: run jpackage
+      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+
+    - name: View artifacts
+      run: ls
+    
+    - name: Codesign executable
+      env: 
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+      #source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+
+      run: |
+        echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+        security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
+        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security default-keychain -s keychain.${{ env.pkg-version-short }}
+        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        security find-identity -v
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        /usr/bin/codesign --force -s "Developer ID Application: Clement Levallois" ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
+
+    - name: View artifacts
+      run: ls
+    
+    - name: upload dmg installer to temp github action working folder
+      uses: actions/upload-artifact@v2
+      with:
+        name: dmg
+        path: "${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg"
+        if-no-files-found: warn
