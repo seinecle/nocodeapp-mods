@@ -111,7 +111,7 @@ jobs:
 
     - name: View artifacts
       run: ls
-
+ 
     - name: run jlink
       run: "jlink --no-header-files --no-man-pages --module-path linux/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
