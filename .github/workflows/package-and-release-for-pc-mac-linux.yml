@@ -87,7 +87,7 @@ jobs:
         security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
         security find-identity -v
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        /usr/bin/codesign --force -s $MACOS_IDENTITY_ID ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
+        /usr/bin/codesign --force -s "$MACOS_IDENTITY_ID" ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
 
     - name: View artifacts
       run: ls
@@ -98,7 +98,7 @@ jobs:
         name: dmg
         path: "${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg"
         if-no-files-found: warn
-
+ 
   linux-deb-installer-creation:
     runs-on: [ubuntu-latest]
     steps:
