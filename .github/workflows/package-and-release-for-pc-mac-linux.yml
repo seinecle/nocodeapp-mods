@@ -80,11 +80,11 @@ jobs:
 
       run: |
         echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
-        security create-keychain -p TempPwD==1234 build.keychain security default-keychain -s build.keychain
-        security unlock-keychain -p TempPwD==1234 build.keychain
-        security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }} security default-keychain -s keychain.${{ env.pkg-version-short }}
+        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
         security find-identity -v
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 build.keychain
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
         /usr/bin/codesign --force -s <identity-id> ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
 
     - name: View artifacts
