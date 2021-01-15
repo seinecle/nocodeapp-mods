@@ -76,8 +76,9 @@ jobs:
       env: 
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-      run: |
       #source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+
+      run: |
         echo $MACOS_CERTIFICATE | base64 —decode > certificate.p12
         security create-keychain -p TempPwD==1234 build.keychain security default-keychain -s build.keychain
         security unlock-keychain -p TempPwD==1234 build.keychain
