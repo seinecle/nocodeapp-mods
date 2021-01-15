@@ -1,3 +1,6 @@
+DO ALL THESE STEPS
+
+- run mvn clean install from the app folder
 - copy the jars from the windows folder to the linux AND mac folders
 
 - increment the minor version
