@@ -14,9 +14,7 @@ env:
   pkg-version-minor: '0.4'
   pkg-release-notes: 'release-notes.md'
   JAR_PATH: 'ls *.jar'
-  JAR_FILE:'basename "${{ env.JAR_PATH }}"'
-
-
+  JAR_FILE:'basename ${{ env.JAR_PATH }}'
 
 jobs:
   macos-dmg-installer-creation:
