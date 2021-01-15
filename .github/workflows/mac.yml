@@ -13,8 +13,8 @@ env:
   #increment the minor version otherwise duplicate tags -> fail
   pkg-version-minor: '0.4'
   pkg-release-notes: 'release-notes.md'
-  JAR_PATH: `ls *.jar`
-  JAR_FILE:`basename "$JAR_PATH"`
+  JAR_PATH: 'ls *.jar'
+  JAR_FILE:'basename "${{ env.JAR_PATH }}"'
 
 
 
@@ -38,7 +38,7 @@ jobs:
         mkdir tmp
         mv "${{ env.JAR_PATH }}" tmp/
         pushd tmp
-        for f in $(ls); do jar xf "${{ $JAR_FILE }}" ; rm "${{ $JAR_FILE }}"; ls *.dylib | xargs codesign -s "Developer ID Application: Clement Levallois" -f -v;       jar cmf META-INF/MANIFEST.MF "../${{ env.JAR_PATH }}" *; done;
+        for f in $(ls); do jar xf "${{ $env.JAR_FILE }}" ; rm "${{ $env.JAR_FILE }}"; ls *.dylib | xargs codesign -s "Developer ID Application: Clement Levallois" -f -v;       jar cmf META-INF/MANIFEST.MF "../${{ env.JAR_PATH }}" *; done;
         popd
   
     - name: run jlink
