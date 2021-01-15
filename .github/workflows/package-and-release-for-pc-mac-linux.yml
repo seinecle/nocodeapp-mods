@@ -11,7 +11,7 @@ env:
   #the short version is useful for the linux build, which truncates the 1.0 into 1
   pkg-version-short: '1'
   #increment the minor version otherwise duplicate tags -> fail
-  pkg-version-minor: '0.3'
+  pkg-version-minor: '0.4'
   pkg-release-notes: 'release-notes.md'
 
 
@@ -71,7 +71,24 @@ jobs:
 
     - name: View artifacts
       run: ls
+    
+    - name: Codesign executable
+      env: 
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+      run: |
+      #source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+        echo $MACOS_CERTIFICATE | base64 —decode > certificate.p12
+        security create-keychain -p TempPwD==1234 build.keychain security default-keychain -s build.keychain
+        security unlock-keychain -p TempPwD==1234 build.keychain
+        security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        security find-identity -v
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 build.keychain
+        /usr/bin/codesign --force -s <identity-id> ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
 
+    - name: View artifacts
+      run: ls
+    
     - name: upload dmg installer to temp github action working folder
       uses: actions/upload-artifact@v2
       with:
