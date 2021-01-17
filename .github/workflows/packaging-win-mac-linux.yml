@@ -63,11 +63,26 @@ jobs:
     - name: View artifacts
       run: ls
 
-    - name: run jlink
-      run: "jlink --no-header-files --no-man-pages --module-path mac/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
+    - name: produce an app image with jpackage
+      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
-    - name: run jpackage
-      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+    - name: Load app certificate
+      env: 
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+      #source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+
+      run: |
+        echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+        security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
+        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security default-keychain -s keychain.${{ env.pkg-version-short }}
+        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        security find-identity -v
+
+    - name: package the app into a dmg
+      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix xxxxxx --mac-signing-key-user-name 'Clement Levallois'
 
     - name: View artifacts
       run: ls
@@ -116,7 +131,7 @@ jobs:
       run: "jlink --no-header-files --no-man-pages --module-path linux/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
     - name: run jpackage
-      run: "jpackage --type deb -n ${{ env.pkg-name }}-linux --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --linux-shortcut --module-path linux/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type deb -n ${{ env.pkg-name }}-linux --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --linux-shortcut --icon logo.ico --module-path linux/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
       run: ls
