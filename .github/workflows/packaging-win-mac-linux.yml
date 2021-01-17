@@ -82,7 +82,7 @@ jobs:
         security find-identity -v
 
     - name: package the app into a dmg
-      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix xxxxxx --mac-signing-key-user-name 'Clement Levallois'"
+      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix ${{ secrets.MACOS_SIGNING_PREFIX }} --mac-signing-key-user-name 'Clement Levallois'"
 
     - name: View artifacts
       run: ls
