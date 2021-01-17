@@ -82,26 +82,26 @@ jobs:
         security find-identity -v
 
     - name: package the app into a dmg
-      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix xxxxxx --mac-signing-key-user-name 'Clement Levallois'
+      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix xxxxxx --mac-signing-key-user-name 'Clement Levallois'"
 
     - name: View artifacts
       run: ls
     
-    # - name: Codesign executable
-      # env: 
-          # MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
-          # MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-#
-      # run: |
-        # echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
-        # security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
-        # security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        # security default-keychain -s keychain.${{ env.pkg-version-short }}
-        # security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        # security import certificate_.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD_ -T /usr/bin/codesign
-        # security find-identity -v
-        # security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        # /usr/bin/codesign --force -s 'Developer ID Application: Clement Levallois' ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
+    - name: Codesign executable
+      env: 
+          MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+
+      run: |
+        echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
+        security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
+        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security default-keychain -s keychain.${{ env.pkg-version-short }}
+        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security import certificate_.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD_ -T /usr/bin/codesign
+        security find-identity -v
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        /usr/bin/codesign --force -s 'Developer ID Application: Clement Levallois ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
 
     - name: View artifacts
       run: ls
