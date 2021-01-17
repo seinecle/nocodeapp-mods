@@ -92,16 +92,16 @@ jobs:
           MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
 
-      run: |
-        echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
-        security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
-        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        security default-keychain -s keychain.${{ env.pkg-version-short }}
-        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        security import certificate_.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD_ -T /usr/bin/codesign
-        security find-identity -v
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        /usr/bin/codesign --force -s "Developer ID Application: Clement Levallois" ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
+      # run: |
+        # echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
+        # security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
+        # security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # security default-keychain -s keychain.${{ env.pkg-version-short }}
+        # security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # security import certificate_.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD_ -T /usr/bin/codesign
+        # security find-identity -v
+        # security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # /usr/bin/codesign --force -s 'Developer ID Application: Clement Levallois' ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
 
     - name: View artifacts
       run: ls
