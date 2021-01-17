@@ -18,6 +18,8 @@ env:
 
 jobs:
   windows-msi-installer-creation:
+    needs: [macos-dmg-installer-creation]
+
     runs-on: [windows-latest]
     steps:
     - uses: actions/checkout@v2
@@ -114,6 +116,8 @@ jobs:
         if-no-files-found: warn
  
   linux-deb-installer-creation:
+    needs: [macos-dmg-installer-creation]
+
     runs-on: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v2
