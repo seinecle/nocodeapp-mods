@@ -91,7 +91,7 @@ jobs:
       env: 
           MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-      #source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+
       run: |
         echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
         security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
