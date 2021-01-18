@@ -86,7 +86,7 @@ jobs:
 
     - name: sign app-image with utility and add entitlements
       timeout-minutes: 30
-      run: "java -jar SignPackage.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID }}' -e 'deploy/package/macosx/entitlements.plist'"
+      run: "java -jar signpackage4J-1.0.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID }}' -e 'deploy/package/macosx/entitlements.plist'"
       
     - name: View artifacts
       run: ls
