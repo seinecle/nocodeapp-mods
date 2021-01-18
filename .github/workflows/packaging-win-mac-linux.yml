@@ -12,8 +12,7 @@ env:
   pkg-version-short: '1'
   #increment the minor version otherwise duplicate tags -> fail
   pkg-version-minor: '0.4'
-  pkg-release-notes: 'release-notes.md'
-
+  p12: ''
 
 
 jobs:
@@ -85,13 +84,21 @@ jobs:
       run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
 
-    - name: package the app into a dmg
-      # run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix ${{ secrets.MACOS_SIGNING_PREFIX }} --mac-signing-key-user-name '${{ secrets.MAC_OS_SIGNING_KEY_USER_NAME }}'"
-      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app"
-
     - name: View artifacts
       run: ls
 
+    - name: turn certificate to p12 file
+      env: 
+          MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+
+      run: |
+        echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
+ 
+    - name: package the app into a dmg
+      # run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix ${{ secrets.MACOS_SIGNING_PREFIX }} --mac-signing-key-user-name '${{ secrets.MAC_OS_SIGNING_KEY_USER_NAME }}'"
+      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app"
+ 
     - name: Codesign executable
       env: 
           MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
