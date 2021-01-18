@@ -57,20 +57,20 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Load app certificate
-      env: 
-          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-      #source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+    # - name: Load app certificate
+      # env: 
+          # MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          # MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+      # source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
 
-      run: |
-        echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
-        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        security default-keychain -s keychain.${{ env.pkg-version-short }}
-        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
-        security find-key -v
-        security find-identity -v
+      # run: |
+        # echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+        # security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # security default-keychain -s keychain.${{ env.pkg-version-short }}
+        # security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        # security find-key -v
+        # security find-identity -v
 
     - uses: actions/setup-java@v1
       with:
@@ -86,7 +86,8 @@ jobs:
 
 
     - name: package the app into a dmg
-      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix ${{ secrets.MACOS_SIGNING_PREFIX }} --mac-signing-key-user-name '${{ secrets.MAC_OS_SIGNING_KEY_USER_NAME }}'"
+      # run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix ${{ secrets.MACOS_SIGNING_PREFIX }} --mac-signing-key-user-name '${{ secrets.MAC_OS_SIGNING_KEY_USER_NAME }}'"
+      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app"
 
     - name: View artifacts
       run: ls
