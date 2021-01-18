@@ -88,7 +88,7 @@ jobs:
 
     - name: View artifacts
       run: ls
-    
+
     - name: Codesign executable
       env: 
           MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
