@@ -85,7 +85,7 @@ jobs:
       run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
 
     - name: sign app-image with utility and add entitlements
-      run: "java -jar SignPackage.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID }}' -e 'src/main/deploy/package/macosx/nocode-app.entitlements'"
+      run: "java -jar SignPackage.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID }}' -e 'deploy/package/macosx/nocode-app.entitlements'"
       
     - name: View artifacts
       run: ls
