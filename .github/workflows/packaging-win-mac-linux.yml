@@ -17,8 +17,6 @@ env:
 
 jobs:
   windows-msi-installer-creation:
-    needs: [macos-dmg-installer-creation]
-
     runs-on: [windows-latest]
     steps:
     - uses: actions/checkout@v2
@@ -61,6 +59,7 @@ jobs:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
       # source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+      # also for security srt-key-partition-list: https://stackoverflow.com/questions/44173831/codesign-returned-unknown-error-1-ffffffffffffffff
 
       run: |
         echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
@@ -80,12 +79,14 @@ jobs:
 
     - name: View artifacts
       run: ls
- 
+    
+    # following steps thanks to: https://blog.dgunia.de/2020/02/
     - name: produce an app image with jpackage
       run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
 
     - name: sign app-image with utility and add entitlements
       timeout-minutes: 30
+      # here using my java version of the jar, exactly the same effect as using the jar from the blog post above
       run: "java -jar signpackage4J-1.0.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' -e 'deploy/package/macosx/entitlements.plist'"
       
     - name: View artifacts
@@ -149,8 +150,6 @@ jobs:
         if-no-files-found: warn
  
   linux-deb-installer-creation:
-    needs: [macos-dmg-installer-creation]
-
     runs-on: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v2
@@ -189,7 +188,7 @@ jobs:
       uses: actions/download-artifact@v2
         
     - name: View artifacts
-      run: ls
+      run: ls -R
 
     - name: create release
       id: create_release
