@@ -69,7 +69,7 @@ jobs:
         security default-keychain -s keychain.${{ env.pkg-version-short }}
         security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
         security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
-        security find-identity -v
+        security find-identity
 
     - uses: actions/setup-java@v1
       with:
