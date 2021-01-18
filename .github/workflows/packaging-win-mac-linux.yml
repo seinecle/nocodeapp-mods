@@ -101,8 +101,9 @@ jobs:
     - name: sign and timestamp the dmg file
       run: "codesign --timestamp --entitlements deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
     
-    # -name: notarize the dmg file
-      # run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
+    -name: notarize the dmg file
+      run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
+
     # - name: turn certificate to p12 file
       # env: 
           # MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
