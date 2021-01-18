@@ -56,20 +56,20 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # - name: Load app certificate
-      # env: 
-          # MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-          # MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+    - name: Load app certificate
+      env: 
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
       # source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
 
-      # run: |
-        # echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
-        # security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        # security default-keychain -s keychain.${{ env.pkg-version-short }}
-        # security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        # security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
-        # security find-key -v
-        # security find-identity -v
+      run: |
+        echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security default-keychain -s keychain.${{ env.pkg-version-short }}
+        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        security find-key -v
+        security find-identity -v
 
     - uses: actions/setup-java@v1
       with:
@@ -81,39 +81,55 @@ jobs:
       run: ls
 
     - name: produce an app image with jpackage
-      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain" --dest appimageoutput --java-options "-Xmx2048m"
 
-
+    - name: sign app-image with utility and add entitlements
+      run: java -jar SignPackage.jar -d appimageoutput -t -r -k "${{ secrets.MACOS_IDENTITY_ID }}" -e "src/main/deploy/package/macosx/nocode-app.entitlements"
+      
     - name: View artifacts
       run: ls
 
-    - name: turn certificate to p12 file
-      env: 
-          MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
-          MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+    - name: codesigning the MacOS folder
+      run: codesign --timestamp --entitlements src/main/deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign "${{ secrets.MACOS_IDENTITY_ID }}" appimageoutput/nocode-app-macos.app/Contents/MacOS/*
+    
+    - name: codesigning the app file itself
+      run: codesign --timestamp --entitlements src/main/deploy/package/macosx/MyApp.entitlements --options runtime --deep -vvv -f --sign "${{ secrets.MACOS_IDENTITY_ID }}" appimageoutput/nocode-app-macos.app
+      
+    - name: create the dmg file
+      run: jpackage -n nocode-app-macos --mac-package-identifier net.clementlevallois.nocodeapp --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name "$ {{ secret.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}" --app-image appimageoutput
+    
+    - name: sign and timestamp the dmg file
+      run: codesign --timestamp --entitlements src/main/deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign "${{ secrets.MACOS_IDENTITY_ID }}" nocode-app-macos-1.0.dmg
+    
+    -name: notarize the dmg file
+      run: xcrun altool --notarize-app --primary-bundle-id net.clementlevallois.nocodeapp --username clementlevallois@gmail.com --password ${{ secrets.MACOS_NOTARIZATION_SECRET }} --file nocode-app-macos-1.0.dmg    
+    # - name: turn certificate to p12 file
+      # env: 
+          # MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
+          # MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
 
-      run: |
-        echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
+      # run: |
+        # echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
  
-    - name: package the app into a dmg
+    # - name: package the app into a dmg
       # run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix ${{ secrets.MACOS_SIGNING_PREFIX }} --mac-signing-key-user-name '${{ secrets.MAC_OS_SIGNING_KEY_USER_NAME }}'"
-      run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app"
+      # run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app"
  
-    - name: Codesign executable
-      env: 
-          MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
-          MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+    # - name: Codesign executable
+      # env: 
+          # MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
+          # MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
 
-      run: |
-        echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
-        security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
-        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        security default-keychain -s keychain.${{ env.pkg-version-short }}
-        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        security import certificate_.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD_ -T /usr/bin/codesign
-        security find-identity -v
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
-        /usr/bin/codesign --force -s 'Developer ID Application: Clement Levallois' ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
+      # run: |
+        # echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
+        # security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
+        # security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # security default-keychain -s keychain.${{ env.pkg-version-short }}
+        # security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # security import certificate_.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD_ -T /usr/bin/codesign
+        # security find-identity -v
+        # security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # /usr/bin/codesign --force -s 'Developer ID Application: Clement Levallois' ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
 
     - name: View artifacts
       run: ls
