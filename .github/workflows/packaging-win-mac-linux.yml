@@ -85,21 +85,25 @@ jobs:
       run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
 
     - name: sign app-image with utility and add entitlements
+      timeout-minutes: 30
       run: "java -jar SignPackage.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID }}' -e 'deploy/package/macosx/nocode-app.entitlements'"
       
     - name: View artifacts
       run: ls
 
     - name: codesigning the MacOS folder
+      timeout-minutes: 30
       run: "codesign --timestamp --entitlements deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
     
     - name: codesigning the app file itself
+      timeout-minutes: 30
       run: "codesign --timestamp --entitlements deploy/package/macosx/MyApp.entitlements --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
       
     - name: create the dmg file
       run: "jpackage -n nocode-app-macos --mac-package-identifier 'net.clementlevallois.nocodeapp' --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' --app-image appimageoutput"
     
     - name: sign and timestamp the dmg file
+      timeout-minutes: 30
       run: "codesign --timestamp --entitlements deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
     
     - name: notarize the dmg file
