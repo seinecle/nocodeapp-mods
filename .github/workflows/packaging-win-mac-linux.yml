@@ -80,7 +80,7 @@ jobs:
 
     - name: View artifacts
       run: ls
-
+ 
     - name: produce an app image with jpackage
       run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
 
