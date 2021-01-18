@@ -12,6 +12,7 @@ env:
   pkg-version-short: '1'
   #increment the minor version otherwise duplicate tags -> fail
   pkg-version-minor: '0.5'
+  pkg-release-notes: 'release-notes.md'
   p12: ''
 
 
