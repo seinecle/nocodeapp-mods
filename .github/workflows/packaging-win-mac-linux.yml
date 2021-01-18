@@ -84,25 +84,25 @@ jobs:
       run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
 
     - name: sign app-image with utility and add entitlements
-      run: java -jar SignPackage.jar -d appimageoutput -t -r -k "${{ secrets.MACOS_IDENTITY_ID }}" -e "src/main/deploy/package/macosx/nocode-app.entitlements"
+      run: "java -jar SignPackage.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID }}' -e 'src/main/deploy/package/macosx/nocode-app.entitlements'"
       
     - name: View artifacts
       run: ls
 
     - name: codesigning the MacOS folder
-      run: codesign --timestamp --entitlements src/main/deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign "${{ secrets.MACOS_IDENTITY_ID }}" appimageoutput/nocode-app-macos.app/Contents/MacOS/*
+      run: "codesign --timestamp --entitlements src/main/deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
     
     - name: codesigning the app file itself
-      run: codesign --timestamp --entitlements src/main/deploy/package/macosx/MyApp.entitlements --options runtime --deep -vvv -f --sign "${{ secrets.MACOS_IDENTITY_ID }}" appimageoutput/nocode-app-macos.app
+      run: "codesign --timestamp --entitlements src/main/deploy/package/macosx/MyApp.entitlements --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
       
     - name: create the dmg file
-      run: jpackage -n nocode-app-macos --mac-package-identifier net.clementlevallois.nocodeapp --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name "$ {{ secret.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}" --app-image appimageoutput
+      run: "jpackage -n nocode-app-macos --mac-package-identifier net.clementlevallois.nocodeapp --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name '${{ secret.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' --app-image appimageoutput"
     
     - name: sign and timestamp the dmg file
-      run: codesign --timestamp --entitlements src/main/deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign "${{ secrets.MACOS_IDENTITY_ID }}" nocode-app-macos-1.0.dmg
+      run: "codesign --timestamp --entitlements src/main/deploy/package/macosx/nocode-app.entitlements --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
     
     -name: notarize the dmg file
-      run: xcrun altool --notarize-app --primary-bundle-id net.clementlevallois.nocodeapp --username clementlevallois@gmail.com --password ${{ secrets.MACOS_NOTARIZATION_SECRET }} --file nocode-app-macos-1.0.dmg    
+      run: "xcrun altool --notarize-app --primary-bundle-id net.clementlevallois.nocodeapp --username clementlevallois@gmail.com --password ${{ secrets.MACOS_NOTARIZATION_SECRET }} --file nocode-app-macos-1.0.dmg"
     # - name: turn certificate to p12 file
       # env: 
           # MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
