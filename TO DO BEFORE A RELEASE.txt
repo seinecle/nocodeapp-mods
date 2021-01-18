@@ -6,4 +6,4 @@ DO ALL THESE STEPS
 - increment the minor version
 - update the release notes
 
-then only you can push
+then only you can push.
