@@ -4,15 +4,12 @@ See below in the "Assets" sub-menu to download the app for mac, windows and linu
 # What is the app about
 "no code app" (provisional title) is a free desktop app to run popular data science jobs, such a sentiment analysis on texts. The app is currently in alpha, meaning that it is not a good first version: ugly and almost no documentation. But it already works and you can test it.
 
-# Limitations:
-- if you install the Windows version, you should not install it in `C:/Program...` Create a subfolder in your `My Documents` directory instead. If you absolutely prefer to install it in `C:/Program...`, you need to launch the app with "Execute as an administrator". The reason is that the app creates a folder to store temp files, and this folder creation needs admin rights if it is happening in `C:/Program`
-- if you install the **Mac** version, you need to run `sudo spctl --master-disable` in the terminal once so that it can be opened. You can run `sudo spctl --master-enable` to restore the defaul security settings after running the app.
+# Limitations
+- Mac: still not sure it works before of certification issues. Try it and report at clementlevallois@protonmail.com
+- Linux: should work out of the box
+- Windows: when installing, avoid to choose the folder `C:/Program...` ? Instead, create a subfolder in your `My Documents` directory. If you absolutely prefer to install it in `C:/Program...`, you will need to launch the app with "Execute as an administrator". The reason is that the app creates a folder to store temp files, and this folder creation needs admin rights if it is happening in `C:/Program`
 
 # changes
 
 ## installation / os
-- added a developer certification signature to the mac version. This should allow mac users to install the app (before this, Mac blocked the install becaus the app was not signed)
-
-## build / infrastructure
-- added metadata to the release instructions for mac, win and linux
-- gather all builds into one common release (instead of one release each for mac, linux and win)
+- Followed these steps to sign the app: https://blog.dgunia.de/2020/02/. This should allow mac users to install the app (before this, Mac blocked the install becaus the app was not signed)
