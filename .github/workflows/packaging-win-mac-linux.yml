@@ -30,7 +30,7 @@ jobs:
     - name: View artifacts
       run: dir
 
-- name: run jlink
+    - name: run jlink
       run: "jlink --no-header-files --no-man-pages --strip-debug --module-path win/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
     - name: run jpackage
