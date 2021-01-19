@@ -11,9 +11,8 @@ env:
   #the short version is useful for the linux build, which truncates the 1.0 into 1
   pkg-version-short: '1'
   #increment the minor version otherwise duplicate tags -> fail
-  pkg-version-minor: '0.6'
+  pkg-version-minor: '0.7'
   pkg-release-notes: 'release-notes.md'
-  p12: ''
 
 
 jobs:
@@ -83,7 +82,7 @@ jobs:
     
     # following steps thanks to: https://blog.dgunia.de/2020/02/
     - name: produce an app image with jpackage
-      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
+      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m' --jlink-options --bind-services"
 
     - name: sign app-image with utility and add entitlements
       timeout-minutes: 30
