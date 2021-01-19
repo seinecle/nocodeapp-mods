@@ -11,4 +11,4 @@ See below in the "Assets" sub-menu to download the app for mac, windows and linu
 # changes
 
 ## bug fixes
-- fixed the creation of the config folder, which failed.
+- fixed the creation of the plugins, which failed.

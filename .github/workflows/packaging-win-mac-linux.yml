@@ -11,7 +11,7 @@ env:
   #the short version is useful for the linux build, which truncates the 1.0 into 1
   pkg-version-short: '1'
   #increment the minor version otherwise duplicate tags -> fail
-  pkg-version-minor: '0.8'
+  pkg-version-minor: '0.9'
   pkg-release-notes: 'release-notes.md'
 
 jobs:
