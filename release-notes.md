@@ -11,11 +11,8 @@ See below in the "Assets" sub-menu to download the app for mac, windows and linu
 
 # changes
 
-## in app UX / UI
-- Added emojis in logs.
-
 ## installation / os
-- Followed these steps to sign the app: https://blog.dgunia.de/2020/02/. This should allow mac users to install the app (before this, Mac blocked the install becaus the app was not signed)
+- macOS: followed these steps to sign the app: https://blog.dgunia.de/2020/02/. This should allow mac users to install the app (before this, Mac blocked the install becaus the app was not signed)
 
 ## build
-removed the jlink step for all builds, and do now: jpackage to create an app image, then jpackage again to create an installer. The advantage is that I can use non modular dependencies (like emoji java)
+removed the jlink step for all builds, and do now: jpackage to create an app image, then jpackage again to create an installer.
