@@ -10,6 +10,5 @@ See below in the "Assets" sub-menu to download the app for mac, windows and linu
 
 # changes
 
-## installation / os
-- macOS: the app is certified and notarized. Mac users to install the app (before this, Mac blocked the install because the app was not signed)
-- all os: the config and plugin folders are now created in the user.home directory, which should remove the need to have admin rights to run the app.
+## bug fixes
+- fixed the creation of the config folder, which failed.
