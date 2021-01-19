@@ -111,7 +111,7 @@ jobs:
       run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
 
     - name: staple
-      run: "xcrun stapler staple 'nocode-app-macos-1.0.dmg'"
+      run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
     
     - name: verify apple cert process
       run: "spctl -a -vv -t install nocode-app-macos-1.0.dmg"
