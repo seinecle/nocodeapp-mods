@@ -30,11 +30,11 @@ jobs:
     - name: View artifacts
       run: dir
 
-    - name: produce an app image with jpackage
-      run: "jpackage --type app-image -n ${{ env.pkg-name }}-windows --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --jlink-options --bind-services --module-path win/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
+- name: run jlink
+      run: "jlink --no-header-files --no-man-pages --strip-debug --module-path win/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
-    - name: turn the app image into an installer with jpackage
-      run: "jpackage --type msi --app-version ${{ env.pkg-version }}  --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --win-console  --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' -n ${{ env.pkg-name }}-windows --app-image appimageoutput"
+    - name: run jpackage
+      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --icon logo.ico --win-dir-chooser --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --win-shortcut --win-console -n ${{ env.pkg-name }}-windows --module-path win/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
       run: dir
@@ -83,7 +83,7 @@ jobs:
     
     # following steps thanks to: https://blog.dgunia.de/2020/02/
     - name: produce an app image with jpackage
-      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --jlink-options --bind-services --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
+      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
 
     - name: sign app-image with utility and add entitlements
       timeout-minutes: 30
@@ -163,11 +163,11 @@ jobs:
     - name: View artifacts
       run: ls
  
-    - name: produce an app image with jpackage
-      run: "jpackage --type app-image -n ${{ env.pkg-name }}-linux --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --jlink-options --bind-services --module-path linux/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m'"
+    - name: run jlink
+      run: "jlink --no-header-files --no-man-pages --strip-debug --module-path linux/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
 
     - name: run jpackage
-      run: "jpackage --type deb -n ${{ env.pkg-name }}-linux --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --linux-shortcut --app-image appimageoutput"
+      run: "jpackage --type deb -n ${{ env.pkg-name }}-linux --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --linux-shortcut --icon logo.ico --module-path linux/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
 
     - name: View artifacts
       run: ls
