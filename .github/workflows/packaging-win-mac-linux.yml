@@ -93,18 +93,18 @@ jobs:
 
     - name: codesigning the MacOS folder
       timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
+      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
     
     - name: codesigning the app file itself
       timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
+      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
       
     - name: create the dmg file
       run: "jpackage -n nocode-app-macos --mac-package-identifier 'net.clementlevallois.nocodeapp' --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' --app-image appimageoutput"
     
     - name: sign and timestamp the dmg file
       timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
+      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
     
     - name: notarize the dmg file
     #the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
