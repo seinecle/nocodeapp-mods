@@ -5,10 +5,8 @@ See below in the "Assets" sub-menu to download the app for mac, windows and linu
 "no code app" (provisional title) is a free desktop app to run popular data science jobs, such a sentiment analysis on texts. The app is currently in alpha, meaning that it is not a good first version: ugly and almost no documentation. But it already works and you can test it.
 
 # Limitations
-- Mac: still not sure it works before of certification issues. Try it and report at clementlevallois@protonmail.com
+- Mac: still impossible to install it because of certification issues.
 - Linux and Windows: should work out of the box
 
 # changes
-
-## bug fixes
-- fixed the creation of the plugins, which failed.
+- added a launcher and a mechanism to update. You should be able to install it once, then just click on update when a new release is available.

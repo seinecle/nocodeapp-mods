@@ -11,7 +11,7 @@ env:
   #the short version is useful for the linux build, which truncates the package version into 1
   pkg-version-short: '1'
   #increment the minor version otherwise duplicate tags -> fail
-  pkg-version-minor: '1.0'
+  pkg-version-minor: '1.1'
   pkg-release-notes: 'release-notes.md'
 
 jobs:
@@ -29,10 +29,10 @@ jobs:
       run: dir
 
     - name: run jlink
-      run: "jlink --no-header-files --no-man-pages --strip-debug --module-path win/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
+      run: "jlink --no-header-files --no-man-pages --strip-debug --module-path win/launcher --add-modules net.clementlevallois.nocodeapp.launcher --bind-services --output image --compress=1"
 
     - name: run jpackage
-      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --icon logo.ico --win-dir-chooser --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --win-shortcut --win-console -n ${{ env.pkg-name }}-windows --module-path win/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --icon logo.ico --win-dir-chooser --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --win-shortcut --win-console -n ${{ env.pkg-name }}-windows --module-path win/launcher --runtime-image image -m net.clementlevallois.nocodeapp.launcher/net.clementlevallois.nocodeapp.launcher.Controller"
 
     - name: View artifacts
       run: dir
@@ -81,7 +81,7 @@ jobs:
     
     # following steps thanks to: https://blog.dgunia.de/2020/02/
     - name: produce an app image with jpackage
-      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/core -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain --dest appimageoutput --java-options '-Xmx2048m' --jlink-options --bind-services"
+      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/launcher -m net.clementlevallois.nocodeapp.launcher/net.clementlevallois.nocodeapp.launcher.Controller --dest appimageoutput --java-options '-Xmx2048m' --jlink-options --bind-services"
 
     - name: sign app-image with utility and add entitlements
       timeout-minutes: 30
@@ -167,10 +167,10 @@ jobs:
       run: ls
  
     - name: run jlink
-      run: "jlink --no-header-files --no-man-pages --strip-debug --module-path linux/core --add-modules net.clementlevallois.nocodeapp.core --bind-services --output image --compress=1"
+      run: "jlink --no-header-files --no-man-pages --strip-debug --module-path linux/launcher --add-modules net.clementlevallois.nocodeapp.launcher --bind-services --output image --compress=1"
 
     - name: run jpackage
-      run: "jpackage --type deb -n ${{ env.pkg-name }}-linux --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --linux-shortcut --icon logo.ico --module-path linux/core --runtime-image image -m net.clementlevallois.nocodeapp.core/net.clementlevallois.nocodeappcore.controller.RealMain"
+      run: "jpackage --type deb -n ${{ env.pkg-name }}-linux --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --linux-shortcut --icon logo.ico --module-path linux/launcher --runtime-image image -m net.clementlevallois.nocodeapp.launcher/net.clementlevallois.nocodeapp.launcher.Controller"
 
     - name: View artifacts
       run: ls
