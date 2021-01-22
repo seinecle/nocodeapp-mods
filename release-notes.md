@@ -9,4 +9,4 @@ See below in the "Assets" sub-menu to download the app for mac, windows and linu
 - Linux and Windows: should work out of the box
 
 # changes
-- added a launcher and a mechanism to update. You should be able to install it once, then just click on update when a new release is available.
+- bug fix: the directory for app files was missing (thx to https://twitter.com/nrv75 for this).
