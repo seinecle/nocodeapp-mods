@@ -11,11 +11,12 @@ env:
   #the short version is useful for the linux build, which truncates the package version into 1
   pkg-version-short: '1'
   #increment the minor version otherwise duplicate tags -> fail
-  pkg-version-minor: '1.2'
+  pkg-version-minor: '1.3'
   pkg-release-notes: 'release-notes.md'
 
 jobs:
   windows-msi-installer-creation:
+    needs: [macos-dmg-installer-creation]
     runs-on: [windows-latest]
     steps:
     - uses: actions/checkout@v2
@@ -93,25 +94,25 @@ jobs:
 
     - name: codesigning the MacOS folder
       timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
+      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
     
     - name: codesigning the app file itself
       timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
+      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime ---verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
       
     - name: create the dmg file
       run: "jpackage -n nocode-app-macos --mac-package-identifier 'net.clementlevallois.nocodeapp' --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' --app-image appimageoutput"
     
     - name: sign and timestamp the dmg file
       timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime -vvv -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
+      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime ---verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
     
-    # - name: notarize the dmg file
-    # the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
-      # run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
+    - name: notarize the dmg file
+    the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
+      run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
 
-    # - name: staple
-      # run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
+    - name: staple
+      run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
     
     # - name: verify apple cert process
       # run: "spctl -a -vv -t install nocode-app-macos-1.0.dmg"
@@ -154,6 +155,7 @@ jobs:
         if-no-files-found: warn
  
   linux-deb-installer-creation:
+    needs: [macos-dmg-installer-creation]
     runs-on: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v2
