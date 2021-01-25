@@ -87,6 +87,15 @@ jobs:
     - name: produce an app image with jpackage
       run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/launcher -m net.clementlevallois.nocodeapp.launcher/net.clementlevallois.nocodeapp.launcher.Controller --dest appimageoutput --java-options '-Xmx2048m' --jlink-options --bind-services"
 
+    - name: View artifacts
+      run: ls -R
+
+    - name: Install create-dmg with brew
+      run: brew install create-dmg
+
+    - name: Create a dmg from the .app
+      run: create-dmg --background ./window-background-800x378@2x.png --volname 'nocode-app' --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon '${{ env.pkg-name }}-macos.app' 200 190 --hide-extension '${{ env.pkg-name }}-macos.app' --app-drop-link 600 185 ~/dmg/nocode-app.dmg 'appimageoutput/'"
+
     - name: sign app-image with utility and add entitlements
       timeout-minutes: 30
       # here using my java version of the jar, exactly the same effect as using the jar from the blog post above
