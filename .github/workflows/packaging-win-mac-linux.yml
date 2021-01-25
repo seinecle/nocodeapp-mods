@@ -133,21 +133,18 @@ jobs:
     # the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
       run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file ${{ env.pkg-name }}.dmg"
 
-    # - name: check the status of notarization
-      # run: |
-        # xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
-        # sleep 5
-        # xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
-        # sleep 10
-        # xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
-        # sleep 10
-        # xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+    - name: check the status of notarization
+      run: |
+        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+        sleep 300
+        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
 
-    # - name: staple
-      # run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
+    - name: staple
+      run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
     
-    # - name: verify apple cert process
-      # run: "spctl -a -vv -t install nocode-app-macos-1.0.dmg"
+    - name: verify apple cert process
+      run: "spctl -a -vv -t install nocode-app-macos-1.0.dmg"
+
     # - name: turn certificate to p12 file
       # env: 
           # MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
