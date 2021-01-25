@@ -81,7 +81,7 @@ jobs:
       run: ls
     
     - name: check asc-provider
-      run: "xcrun altool --list-providers -u 'clementlevallois@gmail.com' -p '@keychain:${{ secrets.MACOS_NOTARIZATION_SECRET }}'"
+      run: "xcrun altool --list-providers -u 'clementlevallois@gmail.com' -p '@keychain:${{ secrets.MAC_KEYCHAIN_SECRET }}'"
     
     - name: Check a particular request UUID for notarization
       run: "xcrun altool --notarization-info --uuid d737939d-2860-4dd6-a9e0-4e12c5413e2c --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}'"
