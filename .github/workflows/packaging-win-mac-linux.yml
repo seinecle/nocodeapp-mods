@@ -100,7 +100,7 @@ jobs:
       run: ls
     
     - name: sign the dmg
-      run: "xcrun codesign --force --sign '${{ secrets.MACOS_IDENTITY_ID }}' --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime dmg/${{ env.pkg-name }}.dmg"  
+      run: "xcrun codesign --force --sign '${{ secrets.MACOS_IDENTITY_ID }}' --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime ${{ env.pkg-name }}.dmg"  
 
     - name: View artifacts
       run: ls -R
