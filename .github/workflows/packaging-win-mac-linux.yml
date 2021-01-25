@@ -81,7 +81,7 @@ jobs:
       run: ls
       
     # - name: Check a particular request UUID for notarization
-      # run: "xcrun altool --notarization-info --uuid 9bb53c0a-5aac-4723-8134-806398713b3e --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}'"
+      run: "xcrun altool --notarization-info --uuid d737939d-2860-4dd6-a9e0-4e12c5413e2c --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}'"
     
     # following steps thanks to: https://blog.dgunia.de/2020/02/
     - name: produce an app image with jpackage
@@ -140,10 +140,10 @@ jobs:
         xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
 
     - name: staple
-      run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
+      run: "xcrun stapler staple -v 'nocode-app-macos.dmg'"
     
     - name: verify apple cert process
-      run: "spctl -a -vv -t install nocode-app-macos-1.0.dmg"
+      run: "spctl -a -vv -t install nocode-app-macos.dmg"
 
     # - name: turn certificate to p12 file
       # env: 
