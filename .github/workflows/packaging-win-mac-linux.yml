@@ -93,17 +93,18 @@ jobs:
     - name: Install create-dmg with brew
       run: brew install create-dmg
 
+    - name: Create a dmg from the .app
+      run: "create-dmg --background ./window-background-800x378@2x.png --volname 'nocode-app' --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon '${{ env.pkg-name }}-macos.app' 200 190 --hide-extension '${{ env.pkg-name }}-macos.app' --app-drop-link 600 185 ~/dmg/nocode-app.dmg 'appimageoutput/'"
+
     - name: View artifacts
       run: ls
     
     - name: sign the dmg
-      run: "xcrun codesign --force --sign '${{ secrets.MACOS_IDENTITY_ID }}' --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime ${{ env.pkg-name }}.dmg"  
+      run: "xcrun codesign --force --sign '${{ secrets.MACOS_IDENTITY_ID }}' --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime dmg/${{ env.pkg-name }}.dmg"  
 
     - name: View artifacts
-      run: ls
+      run: ls -R
 
-    # - name: Create a dmg from the .app
-      # run: "create-dmg --background ./window-background-800x378@2x.png --volname 'nocode-app' --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon '${{ env.pkg-name }}-macos.app' 200 190 --hide-extension '${{ env.pkg-name }}-macos.app' --app-drop-link 600 185 ~/dmg/nocode-app.dmg 'appimageoutput/'"
 
     # - name: sign app-image with utility and add entitlements
       # timeout-minutes: 30
@@ -128,9 +129,9 @@ jobs:
       # timeout-minutes: 30
       # run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
     
-    # - name: notarize the dmg file
+    - name: notarize the dmg file
     # the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
-      # run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
+      run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file dmg/${{ env.pkg-name }}.dmg"
 
     # - name: check the status of notarization
       # run: |
