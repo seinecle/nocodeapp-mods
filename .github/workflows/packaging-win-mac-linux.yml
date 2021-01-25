@@ -80,8 +80,8 @@ jobs:
     - name: View artifacts
       run: ls
       
-    - name: Check a particular request UUID for notarization
-      run: "xcrun altool --notarization-info --uuid 9bb53c0a-5aac-4723-8134-806398713b3e --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}'"
+    # - name: Check a particular request UUID for notarization
+      # run: "xcrun altool --notarization-info --uuid 9bb53c0a-5aac-4723-8134-806398713b3e --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}'"
     
     # following steps thanks to: https://blog.dgunia.de/2020/02/
     - name: produce an app image with jpackage
