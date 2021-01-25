@@ -131,7 +131,7 @@ jobs:
     
     - name: notarize the dmg file
     # the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
-      run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file dmg/${{ env.pkg-name }}.dmg"
+      run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file ${{ env.pkg-name }}.dmg"
 
     # - name: check the status of notarization
       # run: |
