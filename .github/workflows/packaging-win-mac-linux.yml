@@ -93,48 +93,57 @@ jobs:
     - name: Install create-dmg with brew
       run: brew install create-dmg
 
-    - name: Create a dmg from the .app
-      run: "create-dmg --background ./window-background-800x378@2x.png --volname 'nocode-app' --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon '${{ env.pkg-name }}-macos.app' 200 190 --hide-extension '${{ env.pkg-name }}-macos.app' --app-drop-link 600 185 ~/dmg/nocode-app.dmg 'appimageoutput/'"
+    - name: View artifacts
+      run: ls
+    
+    - name: sign the dmg
+      run: "xcrun codesign --force --sign '${{ secrets.MACOS_IDENTITY_ID }}' --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime ${{ env.pkg-name }}.dmg"  
 
-    - name: sign app-image with utility and add entitlements
-      timeout-minutes: 30
-      # here using my java version of the jar, exactly the same effect as using the jar from the blog post above
-      run: "java -jar signpackage4J-1.0.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' -e 'deploy/package/macosx/entitlements.plist'"
-      
     - name: View artifacts
       run: ls
 
-    - name: codesigning the MacOS folder
-      timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
-    
-    - name: codesigning the app file itself
-      timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
+    # - name: Create a dmg from the .app
+      # run: "create-dmg --background ./window-background-800x378@2x.png --volname 'nocode-app' --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon '${{ env.pkg-name }}-macos.app' 200 190 --hide-extension '${{ env.pkg-name }}-macos.app' --app-drop-link 600 185 ~/dmg/nocode-app.dmg 'appimageoutput/'"
+
+    # - name: sign app-image with utility and add entitlements
+      # timeout-minutes: 30
+      here using my java version of the jar, exactly the same effect as using the jar from the blog post above
+      # run: "java -jar signpackage4J-1.0.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' -e 'deploy/package/macosx/entitlements.plist'"
       
-    - name: create the dmg file
-      run: "jpackage -n nocode-app-macos --mac-package-identifier 'net.clementlevallois.nocodeapp' --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' --app-image appimageoutput"
+    # - name: View artifacts
+      # run: ls
+
+    # - name: codesigning the MacOS folder
+      # timeout-minutes: 30
+      # run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
     
-    - name: sign and timestamp the dmg file
-      timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
+    # - name: codesigning the app file itself
+      # timeout-minutes: 30
+      # run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
+      
+    # - name: create the dmg file
+      # run: "jpackage -n nocode-app-macos --mac-package-identifier 'net.clementlevallois.nocodeapp' --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' --app-image appimageoutput"
     
-    - name: notarize the dmg file
+    # - name: sign and timestamp the dmg file
+      # timeout-minutes: 30
+      # run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
+    
+    # - name: notarize the dmg file
     # the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
-      run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
+      # run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
 
-    - name: check the status of notarization
-      run: |
-        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
-        sleep 5
-        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
-        sleep 10
-        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
-        sleep 10
-        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+    # - name: check the status of notarization
+      # run: |
+        # xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+        # sleep 5
+        # xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+        # sleep 10
+        # xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+        # sleep 10
+        # xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
 
-    - name: staple
-      run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
+    # - name: staple
+      # run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
     
     # - name: verify apple cert process
       # run: "spctl -a -vv -t install nocode-app-macos-1.0.dmg"
