@@ -94,11 +94,11 @@ jobs:
 
     - name: codesigning the MacOS folder
       timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
+      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
     
     - name: codesigning the app file itself
       timeout-minutes: 30
-      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
+      run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
       
     - name: create the dmg file
       run: "jpackage -n nocode-app-macos --mac-package-identifier 'net.clementlevallois.nocodeapp' --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' --app-image appimageoutput"
@@ -110,6 +110,16 @@ jobs:
     - name: notarize the dmg file
     # the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
       run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file 'nocode-app-macos-1.0.dmg'"
+
+    - name: check the status of notarization
+      run: |
+        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+        sleep 5
+        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+        sleep 10
+        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+        sleep 10
+        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
 
     - name: staple
       run: "xcrun stapler staple -v 'nocode-app-macos-1.0.dmg'"
