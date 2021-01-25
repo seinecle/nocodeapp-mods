@@ -105,7 +105,7 @@ jobs:
     - name: View artifacts
       run: ls -R
 
-
+ 
     # - name: sign app-image with utility and add entitlements
       # timeout-minutes: 30
       # here using my java version of the jar, exactly the same effect as using the jar from the blog post above
