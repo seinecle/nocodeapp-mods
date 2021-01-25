@@ -94,7 +94,7 @@ jobs:
       run: brew install create-dmg
 
     - name: Create a dmg from the .app
-      run: create-dmg --background ./window-background-800x378@2x.png --volname 'nocode-app' --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon '${{ env.pkg-name }}-macos.app' 200 190 --hide-extension '${{ env.pkg-name }}-macos.app' --app-drop-link 600 185 ~/dmg/nocode-app.dmg 'appimageoutput/'"
+      run: "create-dmg --background ./window-background-800x378@2x.png --volname 'nocode-app' --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon '${{ env.pkg-name }}-macos.app' 200 190 --hide-extension '${{ env.pkg-name }}-macos.app' --app-drop-link 600 185 ~/dmg/nocode-app.dmg 'appimageoutput/'"
 
     - name: sign app-image with utility and add entitlements
       timeout-minutes: 30
