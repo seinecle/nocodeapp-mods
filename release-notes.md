@@ -9,4 +9,4 @@ See below in the "Assets" sub-menu to download the app for mac, windows and linu
 - Linux and Windows: should work out of the box
 
 # changes
-- bug fix: the directory for app files was missing (thx to https://twitter.com/nrv75 for this).
+- added the possibility to display rich text in the UI with javafx-web

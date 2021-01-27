@@ -1,0 +1,137 @@
+  macos-dmg-installer-creation:
+    runs-on: [macos-latest]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Load app certificate
+      env: 
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+      # source: https://localazy.com/blog/how-to-automatically-sign-macos-apps-using-github-actions
+      # also for security srt-key-partition-list: https://stackoverflow.com/questions/44173831/codesign-returned-unknown-error-1-ffffffffffffffff
+
+      run: |
+        echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+        security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
+        security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security default-keychain -s keychain.${{ env.pkg-version-short }}
+        security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security import certificate.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        security add-generic-password -a 'clementlevallois@gmail.com' -w '$MACOS_DEV_AC_PWD' -s 'my-item-name'
+        security find-identity -v
+ 
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '15'
+        java-package: jdk
+        architecture: x64
+ 
+    - name: View artifacts
+      run: ls
+    
+    - name: check asc-provider
+      run: "xcrun altool --list-providers --verbose -u 'clementlevallois@gmail.com' -p '@keychain:my-item-name'"
+    
+    - name: Check a particular request UUID for notarization
+      run: "xcrun altool --notarization-info --uuid d737939d-2860-4dd6-a9e0-4e12c5413e2c --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}'"
+    
+    # following steps thanks to: https://blog.dgunia.de/2020/02/
+    - name: produce an app image with jpackage
+      run: "jpackage --type app-image -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --icon logo.ico --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --module-path mac/launcher -m net.clementlevallois.nocodeapp.launcher/net.clementlevallois.nocodeapp.launcher.Controller --dest appimageoutput --java-options '-Xmx2048m' --jlink-options --bind-services"
+
+    - name: View artifacts
+      run: ls -R
+
+    - name: Install create-dmg with brew
+      run: brew install create-dmg
+
+    - name: Create a dmg from the .app
+      run: "create-dmg --background ./window-background-800x378@2x.png --volname 'nocode-app' --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon '${{ env.pkg-name }}-macos.app' 200 190 --hide-extension '${{ env.pkg-name }}-macos.app' --app-drop-link 600 185 ~/dmg/nocode-app.dmg 'appimageoutput/'"
+
+    - name: View artifacts
+      run: ls
+    
+    - name: sign the dmg
+      run: "xcrun codesign --force --sign '${{ secrets.MACOS_IDENTITY_ID }}' --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime ${{ env.pkg-name }}.dmg"  
+
+    - name: View artifacts
+      run: ls -R
+
+ 
+    # - name: sign app-image with utility and add entitlements
+      # timeout-minutes: 30
+      # here using my java version of the jar, exactly the same effect as using the jar from the blog post above
+      # run: "java -jar signpackage4J-1.0.jar -d appimageoutput -t -r -k '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' -e 'deploy/package/macosx/entitlements.plist'"
+      
+    # - name: View artifacts
+      # run: ls
+
+    # - name: codesigning the MacOS folder
+      # timeout-minutes: 30
+      # run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app/Contents/MacOS/*"
+    
+    # - name: codesigning the app file itself
+      # timeout-minutes: 30
+      # run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --deep --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' appimageoutput/nocode-app-macos.app"
+      
+    # - name: create the dmg file
+      # run: "jpackage -n nocode-app-macos --mac-package-identifier 'net.clementlevallois.nocodeapp' --mac-package-name nocode-app-macos --mac-sign --mac-signing-key-user-name '${{ secrets.MACOS_IDENTITY_ID_WITHOUT_PREFIX }}' --app-image appimageoutput"
+    
+    # - name: sign and timestamp the dmg file
+      # timeout-minutes: 30
+      # run: "codesign --timestamp --entitlements deploy/package/macosx/entitlements.plist --options runtime --verbose=10 -f --sign '${{ secrets.MACOS_IDENTITY_ID }}' nocode-app-macos-1.0.dmg"
+    
+    - name: notarize the dmg file
+    # the notarization secret needs to be created from the developer account, see: https://support.apple.com/en-us/HT204397
+      run: "xcrun altool --notarize-app --primary-bundle-id 'net.clementlevallois.nocodeapp' --username 'clementlevallois@gmail.com' --password '${{ secrets.MACOS_NOTARIZATION_SECRET }}' --file ${{ env.pkg-name }}.dmg"
+
+    - name: check the status of notarization
+      run: |
+        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+        sleep 300
+        xcrun altool --notarization-history 0 -u 'clementlevallois@gmail.com' -p '${{ secrets.MACOS_NOTARIZATION_SECRET }}'
+
+    - name: staple
+      run: "xcrun stapler staple -v 'nocode-app-macos.dmg'"
+    
+    - name: verify apple cert process
+      run: "spctl -a -vv -t install nocode-app-macos.dmg"
+
+    # - name: turn certificate to p12 file
+      # env: 
+          # MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
+          # MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+
+      # run: |
+        # echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
+ 
+    # - name: package the app into a dmg
+      # run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app --mac-sign --mac-package-signing-prefix ${{ secrets.MACOS_SIGNING_PREFIX }} --mac-signing-key-user-name '${{ secrets.MAC_OS_SIGNING_KEY_USER_NAME }}'"
+      # run: "jpackage --type dmg -n ${{ env.pkg-name }}-macos --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --app-image ${{ env.pkg-name }}-macos.app"
+ 
+    # - name: Codesign executable
+      # env: 
+          # MACOS_CERTIFICATE_: ${{ secrets.MACOS_CERTIFICATE }}
+          # MACOS_CERTIFICATE_PWD_: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+
+      # run: |
+        # echo $MACOS_CERTIFICATE_ | base64 --decode > certificate_.p12
+        # security delete-keychain "keychain.${{ env.pkg-version-short }}" || :
+        # security create-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # security default-keychain -s keychain.${{ env.pkg-version-short }}
+        # security unlock-keychain -p TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # security import certificate_.p12 -k keychain.${{ env.pkg-version-short }} -P $MACOS_CERTIFICATE_PWD_ -T /usr/bin/codesign
+        # security find-identity -v
+        # security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k TempPwD==1234 keychain.${{ env.pkg-version-short }}
+        # /usr/bin/codesign --force -s 'Developer ID Application: Clement Levallois' ./${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg -v
+
+    - name: View artifacts
+      run: ls
+    
+    - name: upload dmg installer to temp github action working folder
+      uses: actions/upload-artifact@v2
+      with:
+        name: dmg
+        path: "${{ env.pkg-name }}-macos-${{ env.pkg-version }}.dmg"
+        if-no-files-found: warn

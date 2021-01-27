@@ -1,0 +1,116 @@
+name: Build for Release
+
+on:
+  [push]
+
+env:
+  pkg-name: 'nocode-app'
+  pkg-version: '1.0'
+  pkg-description: 'no code app for data science jobs'
+  pkg-vendor: 'Clement Levallois - www.clementlevallois.net'
+  #the short version is useful for the linux build, which truncates the package version into 1
+  pkg-version-short: '1'
+  #increment the minor version otherwise duplicate tags -> fail
+  pkg-version-minor: '1.4'
+  pkg-release-notes: 'release-notes.md'
+
+jobs:
+  windows-msi-installer-creation:
+    runs-on: [windows-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '15'
+        java-package: jdk
+        architecture: x64
+
+    - name: View artifacts
+      run: dir
+
+    - name: run jlink
+      run: "jlink --no-header-files --no-man-pages --strip-debug --module-path win/launcher --add-modules net.clementlevallois.nocodeapp.launcher --bind-services --output image --compress=1"
+
+    - name: run jpackage
+      run: "jpackage --type msi --win-menu --win-menu-group ${{ env.pkg-name }} --win-dir-chooser --win-shortcut --icon logo.ico --win-dir-chooser --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --win-shortcut --win-console -n ${{ env.pkg-name }}-windows --module-path win/launcher --runtime-image image -m net.clementlevallois.nocodeapp.launcher/net.clementlevallois.nocodeapp.launcher.Controller"
+
+    - name: View artifacts
+      run: dir
+
+    - name: upload msi installer to temp github action working folder
+      uses: actions/upload-artifact@v2
+      with:
+        name: msi
+        # we upload release notes just on one job (this one) to avoid corruption with simulatenous uploads of the same file
+        path: |
+          ${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
+          ${{ env.pkg-release-notes }}
+          
+        if-no-files-found: warn
+ 
+  linux-deb-installer-creation:
+    runs-on: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '15'
+        java-package: jdk
+        architecture: x64
+
+    - name: View artifacts
+      run: ls
+ 
+    - name: run jlink
+      run: "jlink --no-header-files --no-man-pages --strip-debug --module-path linux/launcher --add-modules net.clementlevallois.nocodeapp.launcher --bind-services --output image --compress=1"
+
+    - name: run jpackage
+      run: "jpackage --type deb -n ${{ env.pkg-name }}-linux --app-version ${{ env.pkg-version }} --description '${{ env.pkg-description }}' --vendor '${{ env.pkg-vendor }}' --linux-shortcut --icon logo.ico --module-path linux/launcher --runtime-image image -m net.clementlevallois.nocodeapp.launcher/net.clementlevallois.nocodeapp.launcher.Controller"
+
+    - name: View artifacts
+      run: ls
+
+    - name: upload deb installer to temp github action working folder
+      uses: actions/upload-artifact@v2
+      with:
+        name: deb
+        #ATTENTION HERE LINUX FOLLOWS THIS WEIRD PATTERN OF NAMING AND ADDS UNDERSCORE + VERSION, SO I FOLLOW THIS PATTERN
+        path: "${{ env.pkg-name }}-linux_${{ env.pkg-version }}-${{ env.pkg-version-short }}_amd64.deb"
+        if-no-files-found: warn
+
+          
+  creates-release-and-upload-all-installers-to-it:
+    needs: [windows-msi-installer-creation, linux-deb-installer-creation]
+    runs-on: [ubuntu-latest]
+    steps:
+    - name: Download all installers and also the release notes
+      uses: actions/download-artifact@v2
+        
+    - name: View artifacts
+      run: ls -R
+
+    - name: create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: v.${{ env.pkg-version }}.${{ env.pkg-version-minor }}
+        release_name: Release ${{ env.pkg-version }}.${{ env.pkg-version-minor }}
+        # release notes are stored within the win folder
+        body_path: msi/${{ env.pkg-release-notes }}
+        draft: false
+        prerelease: false
+       
+    - name: Upload all installers to release page
+      id: upload-release-asset 
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v.${{ env.pkg-version }}.${{ env.pkg-version-minor }}
+        name: Release ${{ env.pkg-version }}.${{ env.pkg-version-minor }}
+        # please note that the underscore in the name of the linux installer is not a mistake: it is added automatically by the linux installer build (see comment above)
+        files: |
+          msi/${{ env.pkg-name }}-windows-${{ env.pkg-version }}.msi
+          deb/${{ env.pkg-name }}-linux_${{ env.pkg-version }}-${{ env.pkg-version-short }}_amd64.deb
