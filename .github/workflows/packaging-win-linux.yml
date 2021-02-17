@@ -101,7 +101,7 @@ jobs:
         body_path: msi/${{ env.pkg-release-notes }}
         draft: false
         prerelease: false
-       
+        
     - name: Upload all installers to release page
       id: upload-release-asset 
       uses: softprops/action-gh-release@v1
