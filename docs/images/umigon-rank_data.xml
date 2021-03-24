@@ -1,0 +1,77 @@
+﻿<!--Document-->
+<Document FileVersion="1.0">
+    <ExportImageSettings FileName="umigon-rank_New.png" JpegQuality="95" ResizeMode="KeepOriginalSize" ImageZoomFactor="100" ImageResizeWidth="0" ImageResizeHeight="0" ImageType="IMG_PNG" />
+    <ImageOptions IsNegative="False" IsGrayscale="False" IsSepia="False" Rotation="0">
+        <BrightnessContrast Brightness="0" Contrast="0" />
+        <HueSaturation Hue="0" Saturation="0" Lightness="0" />
+        <EmbossSettings UseEmboss="False" Angle="45" Strength="10" GreyLevel="160" />
+        <Canvas>
+            <Box Left="0" Top="0" Width="958" Height="704" />
+            <BackColor Alpha="255" R="255" G="255" B="255" />
+        </Canvas>
+        <Flip HorizontalFlip="False" VerticalFlip="False" />
+        <ColorReplacementSettings ColorMatchingTolerance="10" />
+    </ImageOptions>
+    <ScaleInfo Enabled="False" Unit="" DistanceInPixels="1" DistanceInUnits="1" />
+    <Layers>
+        <Layer Name="Layer1" Visible="True" LockedShapesIndex="">
+            <Shapes>
+                <Shape Type="Oval">
+                    <Settings>
+                        <MiscSettings GroupRendering="Unknown" />
+                        <Font Name="Arial" Size="12" Style="Regular">
+                            <Color Alpha="255" R="0" G="0" B="0" />
+                        </Font>
+                        <Line Width="8" Dash="Solid" Join="Round" OutlineType="Color" DashOffset="False" StartRoundCap="False" EndRoundCap="False">
+                            <Color Alpha="255" R="234" G="22" B="30" />
+                        </Line>
+                        <Fill FillType="None">
+                            <Color Alpha="255" R="255" G="255" B="255" />
+                            <GradientSettings Type="Linear" Angle="0" HorizontalOffset="0" VerticalOffset="0" StartExtension="0" EndExtension="0" BoundaryResize="100">
+                                <StartingColor Alpha="255" R="0" G="0" B="0" />
+                                <EndingColor Alpha="255" R="255" G="255" B="255" />
+                                <Blend />
+                            </GradientSettings>
+                            <EmbeddedImage Align="Center" ImageFillType="Stretch" Alpha="255" FileName="">
+                                <StretchSettings Type="KeepOriginalSize" Align="Center" ZoomFactor="100">
+                                    <Offset X="0" Y="0" />
+                                </StretchSettings>
+                                <TileSettings WrapMode="Tile">
+                                    <Offset X="0" Y="0" />
+                                </TileSettings>
+                                <ImageOptions IsNegative="False" Rotation="0">
+                                    <Flip HorizontalFlip="False" VerticalFlip="False" />
+                                    <ColorReplacementSettings ColorMatchingTolerance="10" />
+                                </ImageOptions>
+                                <ImageData><![CDATA[]]></ImageData>
+                            </EmbeddedImage>
+                            <FillWithCurrentImage FocusX="0" FocusY="0" ZoomFactor="100" />
+                        </Fill>
+                        <TextEffect UseTextEffect="False" />
+                        <EffectSettings>
+                            <Shadow UseShadow="False" Angle="45" Offset="5" Size="100" BlurLevel="0">
+                                <Color Alpha="255" R="0" G="0" B="0" />
+                            </Shadow>
+                            <Glow UseGlow="False" BlurLevel="20" Thickness="8">
+                                <Color Alpha="255" R="29" G="199" B="244" />
+                            </Glow>
+                            <WavyLine UseWavyLine="False" WavePattern="CosineSmooth" Ridges="5" Height="20" VerticalFlip="False" OffsetAtStartPoint="0" OffsetAtEndPoint="0" />
+                            <RoundCorners Radius="0" />
+                        </EffectSettings>
+                    </Settings>
+                    <BlockText Align="Center" VerticalAlign="Middle" RightToLeft="Unknown">
+                        <Text></Text>
+                        <Margin Left="0" Top="0" Right="0" Bottom="0" />
+                        <LineSpacing UseStandardLineSpacing="True" LineSpacingFactor="1" SpacingBeforeParagraph="0" SpacingAfterParagraph="0" />
+                        <FirstLineIndent Indent="0" IncludeFirstParagraph="True" />
+                        <TextListSettings TextListType="None" />
+                    </BlockText>
+                    <Data Rotation="0">
+                        <Extent X="-7.69398880004883" Y="80.7868804931641" Width="411.62841796875" Height="79.5045623779297" />
+                    </Data>
+                </Shape>
+            </Shapes>
+        </Layer>
+    </Layers>
+    <Snapshots />
+</Document>
