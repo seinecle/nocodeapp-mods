@@ -19,6 +19,7 @@ Each function asks you for a text file in input. It returns a file in output. Yo
 
 ## A note on Umigon: best of its class 
 [A comparative study](https://arxiv.org/abs/1512.01818) has found that out of 24 solutions, Umigon is the best performer 🏁 for sentiment analysis on social media text in English. See the table below and check [the paper behind Umigon](https://www.aclweb.org/anthology/S13-2068.pdf):
+
 ![Umigon ranks first](./images/umigon-rank.png)
 
 Note: "3-Classes" at the top of the left column means that the 24 solutions are judged on their performance on analyzing sentiments in three categories: positive, neutral and negative. "2-Classes" means that the solutions are tested on texts which are only positive or negative in sentiment. Umigon has been released in 2012 and has been continuously updated and improved since.
