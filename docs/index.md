@@ -5,6 +5,7 @@ layout: default
 Nocodeapp: data exploration functions for analysts, students, researchers and journalists. No need to code. Free, no registration required.
 
 [Download and install for windows](https://github.com/seinecle/nocodeapp-mods/releases/download/v.1.0.1.5/nocode-app-windows-1.0.msi)
+
 [Download and install for linux](https://github.com/seinecle/nocodeapp-mods/releases/download/v.1.0.1.5/nocode-app-linux_1.0-1_amd64.deb)
 
 ## Use cases:
@@ -20,9 +21,10 @@ Each function asks you for a text file in input. It returns a file in output. Yo
 [A comparative study](https://arxiv.org/abs/1512.01818) has found that out of 24 solutions, Umigon is the best performer 🏁 for sentiment analysis on social media text in English. See the table below and check [the paper behind Umigon](https://www.aclweb.org/anthology/S13-2068.pdf):
 ![Umigon ranks first](./images/umigon-rank.png)
 
-Note: "3-Classes" at the top of the left column means that the 24 solutions are judged on their performance on analyzing sentiments in three categories: positive, neutral and negative. "2-Classes" means that the solutions are tested on texts which are only positive or negative in sentiment. Umigon has been released in 2012 and has been continually updated and improved since.
+Note: "3-Classes" at the top of the left column means that the 24 solutions are judged on their performance on analyzing sentiments in three categories: positive, neutral and negative. "2-Classes" means that the solutions are tested on texts which are only positive or negative in sentiment. Umigon has been released in 2012 and has been continuously updated and improved since.
 
-**Questions / suggestions on the app and the functions**: clementlevallois@protonmail.com or get in touch on Twitter [@seinecle](http://twitter.com/seinecle).
+## Questions / suggestions
+New features? Improvments? I'll do my best to develop them. Get in touch at clementlevallois@protonmail.com or on Twitter [@seinecle](http://twitter.com/seinecle).
 
 
 ## The interface of the four functions:
