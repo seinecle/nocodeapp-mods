@@ -16,8 +16,9 @@ Each function asks you for a text file in input. It returns a file in output. Yo
 - Cowo: transform your texts into networks. 📝 -> 🕸️
 - Topics: identify the key topics in texts of any language. 📰
 - Gaze: find the network structure in your list of items. 🗂️ -> 🕸️
+- Organic: distinguish natural from corporate tweets. 🥑🍃🌳 🆚 📢🏛️🛍️
 
-## A note on Umigon: best of its class 
+## A note on Umigon: best of its class
 [A comparative study](https://arxiv.org/abs/1512.01818) has found that out of 24 solutions, Umigon is the best performer 🏁 for sentiment analysis on social media text in English. See the table below and check [the paper behind Umigon](https://www.aclweb.org/anthology/S13-2068.pdf):
 
 ![Umigon ranks first](./images/umigon-rank.png)
