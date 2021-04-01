@@ -4,9 +4,9 @@ layout: default
 
 Nocodeapp: data exploration functions for analysts, students, researchers and journalists. No need to code. Free, no registration required.
 
-[Download and install for windows](https://github.com/seinecle/nocodeapp-mods/releases/download/v.1.0.1.5/nocode-app-windows-1.0.msi)
+[Download and install for windows](https://github.com/seinecle/nocodeapp-mods/releases/download/v.1.0.1.6/nocode-app-windows-1.0.msi)
 
-[Download and install for linux](https://github.com/seinecle/nocodeapp-mods/releases/download/v.1.0.1.5/nocode-app-linux_1.0-1_amd64.deb)
+[Download and install for linux](https://github.com/seinecle/nocodeapp-mods/releases/download/v.1.0.1.6/nocode-app-linux_1.0-1_amd64.deb)
 
 ## Use cases:
 
