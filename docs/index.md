@@ -22,7 +22,7 @@ Each function asks you for a text file in input. It returns a file in output. Yo
 
 ![Umigon ranks first](./images/umigon-rank.png)
 
-Note: "3-Classes" at the top of the left column means that the 24 solutions are judged on their performance on analyzing sentiments in three categories: positive, neutral and negative. "2-Classes" means that the solutions are tested on texts which are only positive or negative in sentiment. Umigon has been released in 2012 and has been continuously updated and improved since.
+Note: "3-Classes" at the top of the left column means that the 24 solutions are judged on their performance on analyzing sentiments in three categories: positive, neutral and negative. "2-Classes" means that the solutions are tested on texts which are only positive or negative in sentiment. Umigon was released in 2012 and has been continuously updated and improved since.
 
 ## Questions / suggestions
 New features? Improvements? I'll do my best to develop them. Get in touch at clementlevallois@protonmail.com or on Twitter [@seinecle](http://twitter.com/seinecle).
