@@ -25,17 +25,46 @@ Each function asks you for a text file in input. It returns a file in output. Yo
 
 Note: "3-Classes" at the top of the left column means that the 24 solutions are judged on their performance on analyzing sentiments in three categories: positive, neutral and negative. "2-Classes" means that the solutions are tested on texts which are only positive or negative in sentiment. Umigon was released in 2012 and has been continuously updated and improved since.
 
-## Questions / suggestions
-New features? Improvements? I'll do my best to develop them. Get in touch at clementlevallois@protonmail.com or on Twitter [@seinecle](http://twitter.com/seinecle).
 
-
-## The interface of the four functions:
+## The interface of the 5 functions:
 
 ![Gaze](./images/Gaze.png)
 ![Umigon](./images/Umigon.png)
 ![Topics](./images/Topics.png)
 ![Cowo](./images/Cowo.png)
+![Organic](./images/Organic.png)
 
+## Questions / suggestions
+New features? Improvements? I'll do my best to develop them. Get in touch at clementlevallois@protonmail.com or on Twitter [@seinecle](http://twitter.com/seinecle).
+
+Or chat directly with Facebook Messenger::
+
+<!-- Messenger Chat Plugin Code -->
+    <div id="fb-root"></div>
+      <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            xfbml            : true,
+            version          : 'v10.0'
+          });
+        };
+
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+      </script>
+
+      <!-- Your Chat Plugin code -->
+      <div class="fb-customerchat"
+        attribution="setup_tool"
+        page_id="100477738861975">
+      </div>
+
+## Installing on Windows
 When installing the app on Windows, you will get a warning sign as Windows is really annoying with certificates. These are the screenshots you will encounter, and where you should click:
 
 ![Warning 1](./images/warning_1.png)
