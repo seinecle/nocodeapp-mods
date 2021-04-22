@@ -37,7 +37,7 @@ Note: "3-Classes" at the top of the left column means that the 24 solutions are 
 ## Questions / suggestions
 New features? Improvements? I'll do my best to develop them. Get in touch at clementlevallois@protonmail.com or on Twitter [@seinecle](http://twitter.com/seinecle).
 
-Or chat directly with Facebook Messenger:
+Or chat directly with Facebook Messenger with the widget here on this page.
 
 <!-- Messenger Chat Plugin Code -->
 <div id="fb-root"></div>
